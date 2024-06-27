@@ -5,6 +5,8 @@ import { InjectModel }                      from '@nestjs/sequelize';
 import { UsuarioModel }                     from '../entities/usuario.entity';
 import { UsuarioDTO }                       from '../dto/usuario.dto';
 
+import { EnderecoModel }                    from '../../endereco/entities/endereco.entity';
+
 @Injectable()
 export class UsuarioRepository {
 
@@ -12,8 +14,8 @@ export class UsuarioRepository {
 
     @InjectModel(UsuarioModel) private readonly usuarioModel: typeof UsuarioModel ) {}
 
-    criarUsuario(usuario: UsuarioDTO): Promise<UsuarioModel> {
-        return this.usuarioModel.create(usuario);
+    async criarUsuario(usuario: UsuarioDTO): Promise<UsuarioModel> {
+        return await this.usuarioModel.create(usuario);
     }
 
     findOne(idUsuario: number): Promise<UsuarioModel> {
@@ -25,7 +27,11 @@ export class UsuarioRepository {
     }
 
     findAll(): Promise<UsuarioModel[]> {
-        return this.usuarioModel.findAll();
+        return this.usuarioModel.findAll({
+            include: [
+                {model: EnderecoModel}
+            ]
+        });
     }
 
     async remove(idUsuario: number): Promise<void> {
@@ -33,7 +39,7 @@ export class UsuarioRepository {
         if (usuario) {
             await usuario.destroy();
         } else {
-            throw new NotFoundException(`ID ${idUsuario} não encontrado`);
+            throw new NotFoundException();
         }
     }
 

@@ -1,22 +1,29 @@
 /* eslint-disable prettier/prettier */
-import { Module, 
-  ValidationPipe,    }          from '@nestjs/common';
+import { MiddlewareConsumer, 
+  Module, 
+  RequestMethod, 
+  ValidationPipe }              from '@nestjs/common';
 import { Dialect }              from "sequelize";
 import { SequelizeModule }      from '@nestjs/sequelize';
 import { AppController }        from './app.controller';
 import { AppService }           from './app.service';
 import * as dotenv              from 'dotenv';
-//import { TransformInterceptor } from '../strategies/transform/transform.interceptor';
-import { APP_PIPE }             from '@nestjs/core';
-//import { json }                 from 'express';
+import { TransformInterceptor } from '../strategies/transform/transform.interceptor';
+import { APP_PIPE, 
+  APP_INTERCEPTOR, 
+  APP_GUARD}                    from '@nestjs/core';
 
-import { UsuarioModule }        from './usuario/usuario.module';
-import { UsuarioModel }         from './usuario/entities/usuario.entity';
+import { UsuarioModule }        from '../domain/usuario/usuario.module';
+import { UsuarioModel }         from '../domain/usuario/entities/usuario.entity';
 
-import { EnderecoModule }       from './endereco/endereco.module';
-import { EnderecoModel }        from './endereco/entities/endereco.entity';
+import { EnderecoModule }       from '../domain/endereco/endereco.module';
+import { EnderecoModel }        from '../domain/endereco/entities/endereco.entity';
 
-import { AuthModule }           from './auth/auth.module';
+import { AuthModule }           from '../domain/auth/auth.module';
+
+import { AuthGuard }            from '../domain/auth/guard/auth.guard';
+
+import { LoggingMiddleware } from '../infrastructure/logging.middleware';
 
 /*
 import { RequisitoModule }  from './requisito/requisito.module';
@@ -60,14 +67,18 @@ dotenv.config();
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
-//    {
-//      provide: APP_INTERCEPTOR,
-//      useClass: TransformInterceptor, 
-//    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor, 
+    },    
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ]
 })
 export class AppModule {
-//  configure(consumer: MiddlewareConsumer) {
-//    consumer.apply(json()).forRoutes({ path: '*', method: RequestMethod.ALL });
- // }
+  configure(consumer: MiddlewareConsumer) {
+      consumer.apply(LoggingMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
 }

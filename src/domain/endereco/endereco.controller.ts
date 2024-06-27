@@ -9,7 +9,10 @@ import {
     Get,
     Post,
     Delete,
-    Put
+    Put,
+    Res,
+    HttpStatus,
+    UseGuards
 } from '@nestjs/common';
 
 import {
@@ -19,6 +22,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
+import { AuthGuard } from '../auth/guard/auth.guard';
 import { EnderecoModel } from './entities/endereco.entity';
 import { EnderecoService } from './service/endereco.service';
 
@@ -26,6 +30,7 @@ import { EnderecoDTO } from './dto/endereco.dto';
 
 @ApiTags('Endereco')
 @Controller('endereco')
+@UseGuards(AuthGuard)
 export class EnderecoController {
 
     constructor( private readonly enderecoService: EnderecoService ) {}
@@ -37,11 +42,11 @@ export class EnderecoController {
         type: EnderecoModel,
     })
     @ApiBadRequestResponse({  description: 'Bad Request'  })
-
     async criarEndereco(@Body() endereco: EnderecoDTO):Promise<EnderecoModel>{
-        return this.enderecoService.criarEndereco(endereco)
+        return await this.enderecoService.criarEndereco(endereco)
     }
 
+    @UsePipes(ValidationPipe)
     @Get()
     findAll(): Promise<EnderecoModel[]> {
       return this.enderecoService.findAll();
@@ -49,30 +54,29 @@ export class EnderecoController {
 
     @UsePipes(ValidationPipe)
     @Delete(':id')
-    remove(@Param('id') idEndereco: number): Promise<void> {
-      return this.enderecoService.remove(idEndereco);
+    @ApiBadRequestResponse({ description: 'Bad Request' })
+    async remove(@Param('id') idEndereco: number, @Res() response): Promise<void> {
+      try{
+            await this.enderecoService.remove(idEndereco);
+            return response.status(HttpStatus.OK).json({message: `Registro com ID ${idEndereco} deletado com sucesso`})
+        }catch (error){
+
+            if(error instanceof NotFoundException){
+                return response.status().json({message: `ID ${idEndereco} não encontrado`});
+            }else{
+                return response.status().json({message: error.message});
+            }
+        }
     }
 
     @UsePipes(ValidationPipe)
     @Put(':id')
     @ApiOkResponse({
-        description: 'The record has been successfully updated.',
+        description: 'Registro atualizado com sucesso',
         type: EnderecoModel,
     })
     @ApiBadRequestResponse({ description: 'Bad Request' })
-
-    async update( @Param('id') idEndereco: number, @Body() enderecoDTO: EnderecoDTO, ): Promise<EnderecoModel> {
-
-        try {
-            return await this.enderecoService.update(idEndereco, enderecoDTO);
-
-        } catch (error) {
-
-            if (error instanceof NotFoundException) {
-                throw new NotFoundException(error.message);
-            }
-
-            throw error;
-        }
+    async update( @Param('id') idEndereco: number, @Body() enderecoDTO: EnderecoDTO ): Promise<EnderecoModel> {
+        return await this.enderecoService.update(idEndereco, enderecoDTO);
     }
 }

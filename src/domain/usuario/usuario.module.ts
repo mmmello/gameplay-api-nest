@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Module }               from '@nestjs/common';
 import { SequelizeModule }      from '@nestjs/sequelize';
+import { CacheModule }          from '@nestjs/cache-manager';
+import { redisStore }           from 'cache-manager-redis-store';
+
 import { UsuarioController }    from './usuario.controller';
 import { UsuarioService }       from './service/usuario.service';
 import { UsuarioModel }         from './entities/usuario.entity';
 import { UsuarioRepository }    from './repository/usuario.repository';
-import { CacheModule }          from '@nestjs/cache-manager';
-import { redisStore }           from 'cache-manager-redis-store';
+
 
 @Module({
     imports: [

@@ -13,23 +13,12 @@ export class EnderecoService {
     ) {}
 
     async findAll(): Promise<EnderecoModel[]> {
-
-        const cacheKey = `endereco_`;
-        const cachedValue = await this.cacheManager.get<EnderecoModel[]>(cacheKey);
-
-        if (cachedValue) {
-            return cachedValue;
-        }
-
-        const enderecos = await this.enderecoRepository.findAll();
-        await this.cacheManager.set(cacheKey, enderecos, { ttl: 10 });
-
-        return enderecos;
+        return await this.enderecoRepository.findAll();
     }
 
     async criarEndereco(endereco: EnderecoDTO): Promise<EnderecoModel> {
     
-        return this.enderecoRepository.criarEndereco({
+        return await this.enderecoRepository.criarEndereco({
             ...endereco,
         });
     }
@@ -39,8 +28,6 @@ export class EnderecoService {
     }
 
     async update(idEndereco: number, enderecoDTO: EnderecoDTO): Promise<EnderecoModel> {
-        const endereco = await this.enderecoRepository.update(idEndereco, enderecoDTO);
-      
-        return endereco;
+        return await this.enderecoRepository.update(idEndereco, enderecoDTO);
     }
 }

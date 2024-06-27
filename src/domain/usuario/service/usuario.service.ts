@@ -28,23 +28,42 @@ export class UsuarioService {
         return usuarios;
     }
 
-    async criarUsuario(usuario: UsuarioDTO): Promise<UsuarioModel> {
-        const hashedPassword = await bcrypt.hash(usuario.senha, 10);
-    
-        return this.usuarioRepository.criarUsuario({
-            ...usuario,
+    async updateCache(): Promise<void> {
+
+        const cacheKey = `usuario_`;
+
+        const usuarios = await this.usuarioRepository.findAll();
+        await this.cacheManager.set(cacheKey, usuarios, { ttl: 10 });
+    }
+
+    async criarUsuario(usuarioDTO: UsuarioDTO): Promise<UsuarioModel> {
+        const hashedPassword = await bcrypt.hash(usuarioDTO.senha, 10);
+
+        const retorno = await this.usuarioRepository.criarUsuario({
+            ...usuarioDTO,
             senha: hashedPassword
         });
+
+        await this.updateCache();
+        return retorno;
     }
 
     async remove(idUsuario: number): Promise<void> {
+
         await this.usuarioRepository.remove(idUsuario);
+        await this.updateCache();
     }
 
     async update(idUsuario: number, usuarioDTO: UsuarioDTO): Promise<UsuarioModel> {
-        const person = await this.usuarioRepository.update(idUsuario, usuarioDTO);
+        const hashedPassword = await bcrypt.hash(usuarioDTO.senha, 10);
+
+        const retorno = await this.usuarioRepository.update(idUsuario, {
+            ...usuarioDTO,
+            senha: hashedPassword
+        });
       
-        return person;
+        await this.updateCache();
+        return retorno;
     }
 
     async findOneByEmail(email: string): Promise<UsuarioModel> {

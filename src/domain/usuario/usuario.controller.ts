@@ -10,11 +10,14 @@ import {
     Put,
     UseGuards,
     ValidationPipe,
-    UsePipes
+    UsePipes,
+    Res,
+    HttpStatus
 } from '@nestjs/common';
 
 import {
     ApiBadRequestResponse,
+    ApiBody,
     ApiCreatedResponse,
     ApiOkResponse,
     ApiTags,
@@ -41,42 +44,42 @@ export class UsuarioController {
         type: UsuarioModel,
     })
     @ApiBadRequestResponse({  description: 'Bad Request'  })
-
-    async criarUsuario(@Body() usuario: UsuarioDTO):Promise<UsuarioModel>{
-        return this.usuarioService.criarUsuario(usuario)
+    @ApiBody({type : UsuarioDTO})
+    async criarUsuario(@Body() usuario: UsuarioDTO): Promise<UsuarioModel>{
+        return await this.usuarioService.criarUsuario(usuario);
     }
 
+    @UsePipes(ValidationPipe)
     @Get()
     findAll(): Promise<UsuarioModel[]> {
-      return this.usuarioService.findAll();
+        return this.usuarioService.findAll();
     }
 
     @UsePipes(ValidationPipe)
     @Delete(':id')
-    remove(@Param('id') idUsuario: number): Promise<void> {
-      return this.usuarioService.remove(idUsuario);
+    @ApiBadRequestResponse({ description: 'Bad Request' })
+    async remove(@Param('id') idUsuario: number, @Res() response): Promise<void> {
+        try{
+            await this.usuarioService.remove(idUsuario);
+            return response.status(HttpStatus.OK).json({message: `Registro com ID ${idUsuario} deletado com sucesso`})
+        }catch (error){
+
+            if(error instanceof NotFoundException){
+                return response.status().json({message: `ID ${idUsuario} não encontrado`});
+            }else{
+                return response.status().json({message: error.message});
+            }
+        }
     }
 
     @UsePipes(ValidationPipe)
-    @Put(':id')
+    @Put('/:id')
     @ApiOkResponse({
-        description: 'The record has been successfully updated.',
+        description: 'Registro atualizado com sucesso',
         type: UsuarioModel,
     })
     @ApiBadRequestResponse({ description: 'Bad Request' })
-
-    async update( @Param('id') idUsuario: number, @Body() usuarioDTO: UsuarioDTO, ): Promise<UsuarioModel> {
-
-        try {
-            return await this.usuarioService.update(idUsuario, usuarioDTO);
-
-        } catch (error) {
-
-            if (error instanceof NotFoundException) {
-                throw new NotFoundException(error.message);
-            }
-
-            throw error;
-        }
+    async update( @Param('id') idUsuario: number, @Body() usuarioDTO: UsuarioDTO): Promise<UsuarioModel> {
+        return await this.usuarioService.update(idUsuario, usuarioDTO);
     }
 }

@@ -10,7 +10,7 @@ import { Table, Column, Model, DataType, HasOne} from 'sequelize-typescript';
 export class UsuarioModel extends Model<UsuarioModel> {
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.NUMBER,
     autoIncrement: true,
     primaryKey: true,
   })
