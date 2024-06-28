@@ -1,10 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsNumber, IsString, IsDecimal, IsDate } from "class-validator";
+import { IsNumber, IsString, IsDate } from "class-validator";
 
 export class JogoDTO {
-
-  @IsNumber()
-  idJogo: number;
 
   @IsString()
   nome: string;
@@ -18,10 +15,10 @@ export class JogoDTO {
   @IsString()
   classIndicativaConteudo: string;
 
-  @IsDecimal()
+  @IsNumber()
   preco: number;
 
-  @IsDecimal()
+  @IsNumber()
   promocao: number;
 
   @IsString()

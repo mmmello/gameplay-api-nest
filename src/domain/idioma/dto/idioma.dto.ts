@@ -4,9 +4,6 @@ import { IsNumber, IsBoolean } from "class-validator";
 export class IdiomaDTO {
 
   @IsNumber()
-  idIdioma: number;
-
-  @IsNumber()
   tipo: number;
 
   @IsBoolean()

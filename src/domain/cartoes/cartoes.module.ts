@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { CartaoController } from './cartoes.controller';
+import { CartoesController } from './cartoes.controller';
 import { CartaoService } from './service/cartoes.service';
 import { CartaoModel } from './entities/cartoes.entity';
 import { CartaoRepository } from './repository/cartoes.repository';
@@ -18,7 +18,7 @@ import { redisStore } from 'cache-manager-redis-store';
             }),
         }),
     ],
-    controllers: [CartaoController],
+    controllers: [CartoesController],
     providers: [CartaoService, CartaoRepository],
     exports: [CartaoService],
 })

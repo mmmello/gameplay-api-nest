@@ -27,10 +27,10 @@ import { CartaoModel } from './entities/cartoes.entity';
 import { CartaoService } from './service/cartoes.service';
 import { CartaoDTO } from './dto/cartoes.dto';
 
-@ApiTags('Cartao')
-@Controller('cartao')
+@ApiTags('Cartoes')
+@Controller('cartoes')
 @UseGuards(AuthGuard)
-export class CartaoController {
+export class CartoesController {
 
     constructor(private readonly cartaoService: CartaoService) {}
 

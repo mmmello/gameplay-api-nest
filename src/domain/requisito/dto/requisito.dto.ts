@@ -4,9 +4,6 @@ import { IsNumber, IsString } from "class-validator";
 export class RequisitoDTO {
 
   @IsNumber()
-  idRequisito: number;
-
-  @IsNumber()
   tipo: number;
 
   @IsString()

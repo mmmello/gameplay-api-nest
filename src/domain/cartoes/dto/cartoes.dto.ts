@@ -3,9 +3,6 @@ import { IsNumber, IsString, IsBoolean } from "class-validator";
 
 export class CartaoDTO {
 
-  @IsNumber()
-  idCartao: number;
-
   @IsString()
   apelido: string;
 

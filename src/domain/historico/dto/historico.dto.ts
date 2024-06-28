@@ -1,10 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsNumber, IsString, IsDecimal, IsDate } from "class-validator";
+import { IsNumber, IsString, IsDate } from "class-validator";
 
 export class HistoricoDTO {
-
-  @IsNumber()
-  idHistorico: number;
 
   @IsDate()
   data: Date;
@@ -12,7 +9,7 @@ export class HistoricoDTO {
   @IsString()
   voucher: string;
 
-  @IsDecimal()
+  @IsNumber()
   preco: number;
 
   @IsNumber()
