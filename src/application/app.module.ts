@@ -25,14 +25,26 @@ import { AuthGuard }            from '../domain/auth/guard/auth.guard';
 
 import { LoggingMiddleware } from '../infrastructure/logging.middleware';
 
-/*
-import { RequisitoModule }  from './requisito/requisito.module';
-import { JogoModule }       from './jogo/jogo.module';
-import { IdiomaModule }     from './idioma/idioma.module';
-import { HistoricoModule }  from './historico/historico.module';
-import { FavoritoModule }   from './favorito/favorito.module';
-import { CategoriaModule }  from './categoria/categoria.module';
-import { CartoesModule }    from './cartoes/cartoes.module';*/
+import { RequisitoModule }  from '../domain/requisito/requisito.module';
+import { RequisitoModel } from 'src/domain/requisito/entities/requisito.entity';
+
+import { JogoModule }       from '../domain/jogo/jogo.module';
+import { JogoModel } from 'src/domain/jogo/entities/jogo.entity';
+
+import { IdiomaModule }     from '../domain/idioma/idioma.module';
+import { IdiomaModel } from 'src/domain/idioma/entities/idioma.entity';
+
+import { HistoricoModule }  from '../domain/historico/historico.module';
+import { HistoricoModel } from 'src/domain/historico/entities/historico.entity';
+
+import { FavoritoModule }   from '../domain/favorito/favorito.module';
+import { FavoritoModel } from 'src/domain/favorito/entities/favorito.entity';
+
+import { CategoriaModule }  from '../domain/categoria/categoria.module';
+import { CategoriaModel } from 'src/domain/categoria/entities/categoria.entity';
+
+import { CartoesModule }    from '../domain/cartoes/cartoes.module';
+import { CartaoModel } from 'src/domain/cartoes/entities/cartoes.entity';
 
 dotenv.config();
 
@@ -47,18 +59,18 @@ dotenv.config();
       database: process.env.DB_DATABASE,
       autoLoadModels: true,
       synchronize: true,
-      models: [UsuarioModel, EnderecoModel/*, RequisitoModule, JogoModule, IdiomaModule, HistoricoModule, FavoritoModule, CategoriaModule, CartoesModule*/],
+      models: [UsuarioModel, EnderecoModel, RequisitoModel, JogoModel, IdiomaModel, HistoricoModel, FavoritoModel, CategoriaModel, CartaoModel],
     }),
     UsuarioModule,
     EnderecoModule,
-    AuthModule
-    /*RequisitoModule,
+    AuthModule,
+    RequisitoModule,
     JogoModule,
     IdiomaModule,
     HistoricoModule,
     FavoritoModule,
     CategoriaModule,
-    CartoesModule*/
+    CartoesModule
   ],
   controllers:  [AppController],
   providers:    [

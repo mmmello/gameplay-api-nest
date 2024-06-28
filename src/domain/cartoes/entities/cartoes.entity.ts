@@ -4,47 +4,47 @@ import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize
 
 @Table({
   timestamps: false,
-  tableName: "endereco",
-  modelName: "EnderecoModel"
+  tableName: "cartoes",
+  modelName: "CartaoModel"
 })
-export class EnderecoModel extends Model<EnderecoModel> {
+export class CartaoModel extends Model<CartaoModel> {
 
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   })
-  idEndereco: number;
+  idCartao: number;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING(20),
   })
-  numero: number;
+  apelido: string;
+
+  @Column({
+    type: DataType.STRING(30),
+  })
+  numero: string;
+
+  @Column({
+    type: DataType.CHAR(5),
+  })
+  validade: string;
 
   @Column({
     type: DataType.STRING(150),
   })
-  rua: string;
+  nome: string;
 
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.INTEGER,
   })
-  bairro: string;
+  codSeguranca: number;
 
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.BOOLEAN,
   })
-  cidade: string;
-
-  @Column({
-    type: DataType.STRING(50),
-  })
-  estado: string;
-
-  @Column({
-    type: DataType.STRING(50),
-  })
-  pais: string;
+  ativo: boolean;
 
   @ForeignKey(() => UsuarioModel)
   @Column({
