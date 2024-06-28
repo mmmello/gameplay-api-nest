@@ -65,7 +65,7 @@ export class UsuarioRepository {
     findOneByEmail(email: string): Promise<UsuarioModel> {
         return this.usuarioModel.findOne({
         where: {
-                email
+                email: email
             }
         });
     }
